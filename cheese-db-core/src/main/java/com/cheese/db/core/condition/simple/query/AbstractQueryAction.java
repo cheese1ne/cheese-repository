@@ -1,4 +1,4 @@
-package com.cheese.db.core.condition.query;
+package com.cheese.db.core.condition.simple.query;
 
 import com.cheese.db.core.condition.AbstractTableAction;
 import com.cheese.db.core.enums.ActionType;

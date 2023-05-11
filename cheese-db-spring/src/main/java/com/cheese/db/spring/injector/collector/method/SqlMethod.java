@@ -15,7 +15,7 @@ public enum SqlMethod {
     /**
      * 删除
      */
-    DELETE("delete", "根据 entity 条件删除记录", "DELETE FROM %s %s %s"),
+    DELETE("delete", "根据 entity 条件删除记录", "DELETE FROM %s %s"),
 
     /**
      * 修改

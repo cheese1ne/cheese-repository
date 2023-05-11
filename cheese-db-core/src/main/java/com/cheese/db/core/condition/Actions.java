@@ -1,7 +1,7 @@
 package com.cheese.db.core.condition;
 
 import com.cheese.db.core.condition.load.LoadAction;
-import com.cheese.db.core.condition.query.DefaultMapQueryAction;
+import com.cheese.db.core.condition.simple.query.DefaultMapQueryAction;
 
 /**
  * 构建Action实例的工厂

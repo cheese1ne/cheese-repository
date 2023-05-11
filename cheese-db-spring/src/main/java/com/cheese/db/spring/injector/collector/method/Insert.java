@@ -45,11 +45,9 @@ public class Insert extends AbstractMethod {
         injectMeta.setSqlCommandType(SqlCommandType.INSERT);
         injectMeta.setKeyColumn(tablePrimary.getColumnName());
         injectMeta.setDbKey(dbKey);
-        String columnScript = oneTableMetaList.stream().map(TableMeta::getColumnName).map(item -> SqlScriptUtils.convertIf(item + ",", String.format("%s != null", "ew.data." + item), false)).collect(Collectors.joining("\n"));
-//        String columnScript = oneTableMetaList.stream().map(TableMeta::getColumnName).map(item -> SqlScriptUtils.convertIf(item + ",", String.format("%s != null", "data." + item), false)).collect(Collectors.joining("\n"));
+        String columnScript = oneTableMetaList.stream().map(TableMeta::getColumnName).map(item -> SqlScriptUtils.convertIf(item + ",", String.format("ew.data.%s != null", item), false)).collect(Collectors.joining("\n"));
         String columnTrimScript = SqlScriptUtils.convertTrim(columnScript, "(", ")", null, ",");
-        String valueScript = oneTableMetaList.stream().map(TableMeta::getColumnName).map(item -> SqlScriptUtils.convertIf(String.format("#{ew.data.%s},", item), String.format("%s != null", "ew.data." + item), false)).collect(Collectors.joining("\n"));
-//        String valueScript = oneTableMetaList.stream().map(TableMeta::getColumnName).map(item -> SqlScriptUtils.convertIf(String.format("#{data.%s},", item), String.format("%s != null", "data." + item), false)).collect(Collectors.joining("\n"));
+        String valueScript = oneTableMetaList.stream().map(TableMeta::getColumnName).map(item -> SqlScriptUtils.convertIf(String.format("#{ew.data.%s},", item), String.format("ew.data.%s != null", item), false)).collect(Collectors.joining("\n"));
         String valueTrimScript = SqlScriptUtils.convertTrim(valueScript, "(", ")", null, ",");
 
         String content = String.format(SqlMethod.INSERT.getSql(), tableName, columnTrimScript, valueTrimScript);

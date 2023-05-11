@@ -2,20 +2,23 @@ package com.cheese.db.sample;
 
 import com.cheese.db.autoconfigure.EnableDevBase;
 import com.cheese.db.core.condition.Action;
-import com.cheese.db.core.condition.insert.InsertTableAction;
+import com.cheese.db.core.condition.simple.delete.DeleteTableAction;
+import com.cheese.db.core.condition.simple.insert.InsertTableAction;
 import com.cheese.db.core.condition.manager.DevBaseActionManager;
+import com.cheese.db.core.enums.Comparator;
+import com.cheese.db.core.enums.LikeType;
+import com.cheese.db.core.enums.RangeType;
 import com.cheese.db.core.mapper.DB;
-import com.cheese.db.sample.service.ICommonService;
 import com.cheese.db.spring.injector.collector.SysSqlConfigInjectMetaCollector;
 import com.cheese.db.spring.injector.collector.dialect.MysqlDialectCollector;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 
 import javax.annotation.Resource;
+import java.util.Date;
 
 /**
  * devbase功能可以兼容DataSourceAutoConfiguration的功能，进行相应的配置即可
@@ -32,48 +35,31 @@ public class CheeseSampleApplication implements CommandLineRunner {
 
     @Resource
     private DB db;
-    @Resource
-    private ApplicationContext applicationContext;
-    @Resource
-    private ICommonService commonService;
 
     @Override
     public void run(String... args) throws Exception {
-//        // 注册行为可以监听ContextRefreshedEvent事件
-//        LoadAction action = Actions.getLoad(DevBaseConstant.DEFAULT_SQL_CONFIG_DATASOURCE, DevBaseConstant.DEFAULT_SQL_CONFIG_CODE);
-//        List<InjectMeta> injectMetas = db.doActionGetList(action, InjectMeta.class);
-//        //默认注入到DB.class中,可根据项目实际持久层mapper实现
-//        applicationContext.publishEvent(new SqlInjectEvent(this, DB.class, InjectType.ALL, injectMetas));
-
-
-//        InsertTableAction insertAction = new InsertTableAction("bus", "tst_one_table");
+        // 新增
         InsertTableAction insertAction = new InsertTableAction("bus", "jbxx_bub");
         insertAction.putData("eq_id", "3");
-        insertAction.putData("brand", "asdasd");
+        insertAction.putData("brand", "brand");
         insertAction.putData("check_data", "2023-04-03");
         insertAction.putData("solid", "无");
         db.doAction(insertAction);
-
+        // 获取自增主键 需要设置数据库表自增，后续可以借助DevBaseActionManager使用雪花id，主键column目前只能精确到数据库配置 devbase-db.configuration.${dbKey}.insert-key-property=id，无法精确配置到表(由于无实体配置)
         Long id = insertAction.getId();
-        System.out.println("id = " + id);
-
-
-//        action = Actions.getLoad(DevBaseConstant.DEFAULT_SQL_CONFIG_DATASOURCE, DevBaseConstant.DEFAULT_TABLE_META_CONFIG_CODE);
-//        action.putParam(DevBaseConstant.TABLE_SCHEMA_KEY, "wish-bus");
-//
-//
-//        List<DefaultTableMeta> defaultTableMetas = db.doActionGetList(action, DefaultTableMeta.class);
-//        // 需要根据元数据组装表格的增删改查InjectMeta并且注入
-//
-//        Map<String, List<DefaultTableMeta>> tableMetaListMap = defaultTableMetas.stream().collect(Collectors.groupingBy(DefaultTableMeta::getTableName));
-//        for (String tableName : tableMetaListMap.keySet()) {
-//            final List<DefaultTableMeta> tableMetaList = tableMetaListMap.get(tableName);
-//
-//        }
-
-//        action = Actions.getSelect("bus", "cfg_cal_url");
-//        List<Map<String, Object>> maps = db.doActionGetList(action);
-//        System.out.println("maps = " + maps);
+        // 删除
+        DeleteTableAction deleteAction = new DeleteTableAction("bus", "jbxx_bub");
+        // 范围删除 range
+        deleteAction.putComparatorCdn("create_time", Comparator.GTE, "2022-10-11 12:30:29");
+        deleteAction.putComparatorCdn("create_time", Comparator.LTE,"2023-05-13 12:30:29");
+        // 范围删除，有索引时数值明确时建议使用 IN
+        deleteAction.putRangeCdn("id", RangeType.IN,95, 96, 97);
+        // 根据字段删除 putCdn 或者 putRangeCdn 使用 Comparator.EQUALS  以下两种方法等价
+        deleteAction.putCdn("eq_id", 3);
+        deleteAction.putComparatorCdn("eq_id", Comparator.EQUALS,3);
+        // 模糊删除
+        deleteAction.putLikeCdn("brand", LikeType.ALL, "brand");
+        db.doAction(deleteAction);
 
         //事务测试
 //        commonService.useTransaction();
@@ -83,6 +69,7 @@ public class CheeseSampleApplication implements CommandLineRunner {
     public SysSqlConfigInjectMetaCollector sysSqlConfigInjectMetaCollector() {
         return new SysSqlConfigInjectMetaCollector();
     }
+
     @Bean
     public MysqlDialectCollector mysqlDialectCollector() {
         return new MysqlDialectCollector();
@@ -97,7 +84,7 @@ public class CheeseSampleApplication implements CommandLineRunner {
                 if (action instanceof InsertTableAction) {
                     InsertTableAction insertAction = (InsertTableAction) action;
                     insertAction.putData("create_by", 50);
-                    insertAction.putData("create_time", "2023-05-11 12:30:29");
+                    insertAction.putData("create_time", new Date());
                     System.out.println("custom devBaseActionManager running");
                 }
             }

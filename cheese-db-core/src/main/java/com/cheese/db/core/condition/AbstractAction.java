@@ -29,32 +29,8 @@ public abstract class AbstractAction implements Action {
         return code;
     }
 
-    public static class PAGE_CONF {
-        public int start;
-        public int limit = 10;
-
-        public PAGE_CONF() {
-        }
-
-        public PAGE_CONF(int start, int limit) {
-            this.start = start;
-            this.limit = limit;
-        }
-
-        public int getStart() {
-            return start;
-        }
-
-        public void setStart(int start) {
-            this.start = start;
-        }
-
-        public int getLimit() {
-            return limit;
-        }
-
-        public void setLimit(int limit) {
-            this.limit = limit;
-        }
+    public String getSqlSegment() {
+        return null;
     }
+
 }
