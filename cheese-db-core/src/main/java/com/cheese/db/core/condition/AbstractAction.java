@@ -3,32 +3,30 @@ package com.cheese.db.core.condition;
 /**
  * 抽象类
  * 如果有公用的一些方法以及属性可以抽提到此类中
- *
- *
+ * <p>
+ * <p>
  * tip:
+ *
  * @author sobann
  */
 public abstract class AbstractAction implements Action {
 
-    private String dbKey;
-    private String code;
+    private final String dbKey;
+    private final String code;
+
+    public AbstractAction(String dbKey, String code) {
+        this.dbKey = dbKey;
+        this.code = code;
+    }
 
     @Override
     public String getDbKey() {
         return dbKey;
     }
 
-    public void setDbKey(String dbKey) {
-        this.dbKey = dbKey;
-    }
-
     @Override
     public String getCode() {
         return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
     }
 
     public static class PAGE_CONF {

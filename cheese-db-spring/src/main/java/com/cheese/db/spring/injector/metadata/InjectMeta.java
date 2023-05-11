@@ -33,4 +33,8 @@ public interface InjectMeta extends DevBaseConstant {
     Class<?> getMapperInterface();
 
     void setMapperInterface(Class<?> mapperInterface);
+
+    String getKeyColumn();
+
+    void setKeyColumn(String keyColumn);
 }

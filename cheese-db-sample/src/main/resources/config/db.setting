@@ -1,5 +1,5 @@
 [sys]
-url = jdbc:mysql://localhost:3306/sys?characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&serverTimezone=GMT%2B8
+url = jdbc:mysql://localhost:3306/wish-sys?characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&serverTimezone=GMT%2B8
 username = root
 password = root
 autoCommit = true
@@ -14,7 +14,7 @@ readOnly = false
 
 
 [bus]
-url = jdbc:mysql://localhost:3306/bus?characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&serverTimezone=GMT%2B8
+url = jdbc:mysql://localhost:3306/wish-bus?characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&serverTimezone=GMT%2B8
 username = root
 password = root
 autoCommit = true

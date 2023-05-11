@@ -25,6 +25,17 @@ public interface DB {
      */
     <R> WrapperResult<Map<String, R>, R> doAction(@Param(DevBaseConstant.ACTION_EW) Action action);
 
+
+    /**
+     * 执行action获取结果,此方法为通用方法,
+     * String 为
+     * 默认result是map时
+     *
+     * @param action
+     * @return
+     */
+//    <R> WrapperResult<Map<String, R>, R> doAction(Action action);
+
     /**
      * 执行action获取结果
      * 使用实例进行包装

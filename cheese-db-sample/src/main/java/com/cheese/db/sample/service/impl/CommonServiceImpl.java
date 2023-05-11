@@ -24,10 +24,14 @@ public class CommonServiceImpl implements ICommonService {
     @DevBaseMultiDataSourceTransactional(transactionDbKeys = {"sys", "bus"})
     @Override
     public void useTransaction() {
-        LoadAction action = Actions.getLoad("sys", "inset_into_test_sys");
+        LoadAction action = Actions.getLoad("bus", "SAVE_ONE_TABLE");
+        action.putData("code", "20230510");
+        action.putData("name", "cheese");
+        action.putData("val", "sobann");
+        action.putData("remark", "cheese-repository");
         db.doAction(action);
-        action = Actions.getLoad("bus", "inset_into_test");
-        db.doAction(action);
-        throw new RuntimeException("rollback transaction");
+//        action = Actions.getLoad("bus", "inset_into_test");
+//        db.doAction(action);
+//        throw new RuntimeException("rollback transaction");
     }
 }
