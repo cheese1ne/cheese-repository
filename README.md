@@ -19,29 +19,26 @@
     <version>1.0.0</version>
 </dependency>
 ```
-2. 搭建springboot工程，并在启动类上添加`@EnableDevBase`注解
+2. 搭建springboot工程，并在启动类上添加`@EnableDevBase`注解（参考cheese-db-sample工程）
 ```java
 /*
 	devbase功能可以兼容DataSourceAutoConfiguration的功能，进行相应的配置即可
 */
 @EnableDevBase
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
-public class CheeseApplication implements CommandLineRunner {
+public class CheeseApplication {
     public static void main(String[] args) {
         SpringApplication.run(CheeseApplication.class,args);
     }
 
-    @Resource
-    private DB db;
-    @Resource
-    private ApplicationContext applicationContext;
+    @Bean
+    public SysSqlConfigInjectMetaCollector sysSqlConfigInjectMetaCollector() {
+        return new SysSqlConfigInjectMetaCollector();
+    }
 
-    @Override
-    public void run(String... args) throws Exception {
-        LoadAction action = Actions.getLoad(DevBaseConstant.DEFAULT_SQL_CONFIG_DATASOURCE, DevBaseConstant.DEFAULT_SQL_CONFIG_CODE);
-        List<InjectMeta> injectMetas = db.doActionGetList(action, InjectMeta.class);
-        //默认注入到DB.class中,可根据项目实际持久层mapper实现
-        applicationContext.publishEvent(new SqlInjectEvent(this, DB.class, InjectType.ALL, injectMetas));
+    @Bean
+    public MysqlDialectCollector mysqlDialectCollector() {
+        return new MysqlDialectCollector();
     }
 }
 ```
@@ -51,6 +48,14 @@ public class CheeseApplication implements CommandLineRunner {
 devbase-db.enabled=true
 # devbase-db使用默认配置，默认为false
 devbase-db.use-default-config=true
+# 需要注入单表操作的数据库名称以及数据库标识，基于hutool db.setting 配置后续会优化
+devbase-db.inject-schemas=wish-bus,wish-sys
+devbase-db.inject-db-keys=bus,sys
+# 数据库单表自增字段 主键自增 使用Jdbc3KeyGenerator存在的问题: 数据表主键字段必须使用自增策略
+devbase-db.configuration.sys.insert-key-property=id
+devbase-db.configuration.bus.insert-key-property=id
+# 需要自定义Action对象参数管理器时候需要覆盖默认bean，DevBaseActionManager在持久层被强引用，暂无法通过配置的方式替换 后续优化
+spring.main.allow-bean-definition-overriding=true
 ```
 4.在`resources\config`目录下创建`db.setting`文件,配置数据源相关信息
 ```setting
