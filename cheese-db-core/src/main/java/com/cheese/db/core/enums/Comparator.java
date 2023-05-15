@@ -25,7 +25,11 @@ public enum Comparator {
     /**
      * 相等
      */
-    EQUALS("="),;
+    EQUALS("="),
+    /**
+     * 不相等
+     */
+    NOT_EQUALS("!=");
 
 
 

@@ -1,4 +1,4 @@
-package com.cheese.db.core.condition.simple.delete;
+package com.cheese.db.core.condition.simple.update;
 
 import com.cheese.db.core.condition.AbstractTableAction;
 import com.cheese.db.core.condition.CommonSegmentProvider;
@@ -11,18 +11,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 删除操作
+ * 修改操作
  *
  * @author sobann
  */
-public class DeleteTableAction extends AbstractTableAction {
+public class UpdateTableAction extends AbstractTableAction {
 
     private Map<String, Object> param;
+    private Map<String, Object> data;
     private final CommonSegmentProvider commonSegmentProvider;
 
-    public DeleteTableAction(String dbKey, String tableName) {
+    public UpdateTableAction(String dbKey, String tableName) {
         super(dbKey, tableName);
         this.param = new HashMap<>(8);
+        this.data = new HashMap<>(8);
         this.commonSegmentProvider = new CommonSegmentProvider();
     }
 
@@ -50,6 +52,18 @@ public class DeleteTableAction extends AbstractTableAction {
         commonSegmentProvider.putComparatorParam(field, comparator, value);
     }
 
+    public void putData(String field, Object value) {
+        this.data.put(field, value);
+    }
+
+    public Map<String, Object> getData() {
+        return data;
+    }
+
+    public void setData(Map<String, Object> data) {
+        this.data = data;
+    }
+
     @Override
     public String getSqlSegment() {
         return commonSegmentProvider.supportSqlSegment();
@@ -57,7 +71,6 @@ public class DeleteTableAction extends AbstractTableAction {
 
     @Override
     public ActionType getActionType() {
-        return ActionType.DELETE;
+        return ActionType.UPDATE;
     }
-
 }

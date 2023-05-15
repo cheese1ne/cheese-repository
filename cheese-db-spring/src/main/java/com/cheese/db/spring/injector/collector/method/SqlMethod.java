@@ -20,12 +20,12 @@ public enum SqlMethod {
     /**
      * 修改
      */
-    UPDATE("update", "根据条件，更新记录", "UPDATE %s %s %s %s"),
+    UPDATE("update", "根据条件，更新记录", "UPDATE %s %s %s"),
 
     /**
      * 查询
      */
-    SELECT_LIST("selectList", "查询满足条件所有数据", "SELECT %s FROM %s %s %s");
+    SELECT("selectList", "查询满足条件所有数据", "SELECT %s FROM %s %s");
     
 
     private final String method;

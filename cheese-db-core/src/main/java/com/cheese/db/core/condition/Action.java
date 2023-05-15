@@ -11,9 +11,24 @@ import com.cheese.db.core.support.DevBaseConstant;
  */
 public interface Action extends DevBaseConstant {
 
+    /**
+     * 数据库标识
+     *
+     * @return
+     */
     String getDbKey();
 
+    /**
+     * 可以理解为唯一名称空间
+     *
+     * @return
+     */
     String getCode();
 
+    /**
+     * 操作类型
+     *
+     * @return
+     */
     ActionType getActionType();
 }

@@ -5,9 +5,7 @@ import com.cheese.db.core.condition.load.LoadAction;
 import com.cheese.db.core.mapper.DB;
 import com.cheese.db.core.support.DevBaseConstant;
 import com.cheese.db.spring.injector.collector.TableInjectMetaCollector;
-import com.cheese.db.spring.injector.collector.method.AbstractMethod;
-import com.cheese.db.spring.injector.collector.method.Delete;
-import com.cheese.db.spring.injector.collector.method.Insert;
+import com.cheese.db.spring.injector.collector.method.*;
 import com.cheese.db.spring.injector.metadata.InjectMeta;
 import com.cheese.db.spring.injector.metadata.TableMeta;
 import com.cheese.db.spring.injector.metadata.simple.MysqlTableMeta;
@@ -32,6 +30,8 @@ public class MysqlDialectCollector extends TableInjectMetaCollector {
         this.injectMethods = new ArrayList<>();
         injectMethods.add(new Insert());
         injectMethods.add(new Delete());
+        injectMethods.add(new Select());
+        injectMethods.add(new Update());
     }
 
     public void addInjectMethods(AbstractMethod... methods) {

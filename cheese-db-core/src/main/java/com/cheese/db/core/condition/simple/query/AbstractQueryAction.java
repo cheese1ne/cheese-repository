@@ -36,6 +36,10 @@ public abstract class AbstractQueryAction<T> extends AbstractTableAction impleme
         return sqlSelect;
     }
 
+    public void putParam(String field, Object value) {
+        this.param.put(field, value);
+    }
+
     public void setParam(Map<String, Object> param) {
         this.param = param;
     }

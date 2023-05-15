@@ -1,41 +1,25 @@
-package com.cheese.db.core.condition.simple.delete;
+package com.cheese.db.core.condition.simple.query;
 
-import com.cheese.db.core.condition.AbstractTableAction;
 import com.cheese.db.core.condition.CommonSegmentProvider;
 import com.cheese.db.core.enums.ActionType;
 import com.cheese.db.core.enums.Comparator;
 import com.cheese.db.core.enums.LikeType;
 import com.cheese.db.core.enums.RangeType;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 删除操作
+ * 查询操作 使用mybatis的MapWrapper处理参数和返回
  *
  * @author sobann
  */
-public class DeleteTableAction extends AbstractTableAction {
+public class QueryTableAction extends AbstractQueryAction<Map<String, Object>> {
 
-    private Map<String, Object> param;
     private final CommonSegmentProvider commonSegmentProvider;
 
-    public DeleteTableAction(String dbKey, String tableName) {
+    public QueryTableAction(String dbKey, String tableName) {
         super(dbKey, tableName);
-        this.param = new HashMap<>(8);
         this.commonSegmentProvider = new CommonSegmentProvider();
-    }
-
-    public void putParam(String field, Object value) {
-        this.param.put(field, value);
-    }
-
-    public Map<String, Object> getParam() {
-        return param;
-    }
-
-    public void setParam(Map<String, Object> cdn) {
-        this.param = cdn;
     }
 
     public void putLikeParam(String field, LikeType likeType, Object value) {
@@ -57,7 +41,6 @@ public class DeleteTableAction extends AbstractTableAction {
 
     @Override
     public ActionType getActionType() {
-        return ActionType.DELETE;
+        return ActionType.SELECT;
     }
-
 }

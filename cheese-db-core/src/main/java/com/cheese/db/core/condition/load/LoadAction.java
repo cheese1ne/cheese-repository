@@ -13,6 +13,8 @@ import java.util.Map;
  */
 public class LoadAction extends AbstractAction {
 
+    private Long id;
+
     /**
      * 此属性为修改和新增准备
      */
@@ -50,6 +52,14 @@ public class LoadAction extends AbstractAction {
 
     public Map<String, Object> getParam() {
         return param;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     @Override

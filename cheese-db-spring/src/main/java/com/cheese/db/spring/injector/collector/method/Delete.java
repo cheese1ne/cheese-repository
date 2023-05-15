@@ -11,7 +11,6 @@ import com.cheese.db.spring.utils.SqlScriptUtils;
 import org.apache.ibatis.mapping.SqlCommandType;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 删除
@@ -45,7 +44,7 @@ public class Delete extends AbstractMethod {
         injectMeta.setCode(dbKey + DevBaseConstant.TOKEN_SEPARATOR + tableName + DevBaseConstant.TOKEN_SEPARATOR + ActionType.DELETE.name());
         injectMeta.setSqlCommandType(SqlCommandType.DELETE);
         injectMeta.setDbKey(dbKey);
-        String columnScript = oneTableMetaList.stream().map(TableMeta::getColumnName).map(item -> SqlScriptUtils.convertIf(String.format("AND %s=#{ew.cdn.%s}", item, item), String.format("ew.cdn.%s != null",item), false)).collect(Collectors.joining("\n"));
+        String columnScript = this.makeColumnParamScript(oneTableMetaList);
         String segmentScript = SqlScriptUtils.convertIf("${ew.sqlSegment}", "ew.sqlSegment != null", false);
         String columnWhereScript = SqlScriptUtils.convertWhere(columnScript + "\n" + segmentScript);
         String content = String.format(SqlMethod.DELETE.getSql(), tableName, columnWhereScript);
