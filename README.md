@@ -3,7 +3,7 @@
 ### 一、架构组件
 - cheese-db-core:`完成与mybatis的整合，针对多数据源重新设计代理方法的执行策略；设计条件构建工具`
 - cheese-db-rpc(待设计):`微服务之间数据调用方式，当前为单体服务设计功能`
-- cheese-db-spring:`cheese-db整合spring，完成持久层实例BeanDefinition的定义、初始化以及持久层代理的创建；多数据源、事务管理器、回话工厂以及回话顶层设计及默认实现；sql注册机以及相关功能设计；多数据源事务处理切面(待完善)`
+- cheese-db-spring:`cheese-db整合spring，完成持久层实例BeanDefinition的定义、初始化以及持久层代理的创建；多数据源、事务管理器、会话工厂以及会话顶层设计及默认实现；sql注册机以及相关功能设计；多数据源事务处理切面(待完善)`
 - cheese-db-spring-boot-starter:`cheese-db-spring接入springboot，提供可插拔式的组件使用方式`
 
 ### 二、架构图
