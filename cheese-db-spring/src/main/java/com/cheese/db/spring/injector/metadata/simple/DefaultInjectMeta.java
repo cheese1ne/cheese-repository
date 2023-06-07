@@ -26,6 +26,8 @@ public class DefaultInjectMeta implements InjectMeta {
 
     private Class<?> mapperInterface;
 
+    private String keyColumn;
+
     public int getSqlCommandTypeCode() {
         return sqlCommandTypeCode;
     }
@@ -107,5 +109,15 @@ public class DefaultInjectMeta implements InjectMeta {
     @Override
     public void setMapperInterface(Class<?> mapperInterface) {
         this.mapperInterface = mapperInterface;
+    }
+
+    @Override
+    public String getKeyColumn() {
+        return keyColumn;
+    }
+
+    @Override
+    public void setKeyColumn(String keyProperty) {
+        this.keyColumn = keyProperty;
     }
 }

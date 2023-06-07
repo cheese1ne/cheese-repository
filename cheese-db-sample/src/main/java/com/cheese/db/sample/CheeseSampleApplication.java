@@ -1,22 +1,21 @@
 package com.cheese.db.sample;
 
 import com.cheese.db.autoconfigure.EnableDevBase;
-import com.cheese.db.core.condition.Actions;
-import com.cheese.db.core.condition.load.LoadAction;
+import com.cheese.db.core.condition.Action;
+import com.cheese.db.core.condition.manager.DevBaseActionManager;
+import com.cheese.db.core.condition.simple.insert.InsertTableAction;
 import com.cheese.db.core.mapper.DB;
-import com.cheese.db.core.support.DevBaseConstant;
 import com.cheese.db.sample.service.ICommonService;
-import com.cheese.db.spring.injector.event.InjectType;
-import com.cheese.db.spring.injector.event.SqlInjectEvent;
-import com.cheese.db.spring.injector.metadata.InjectMeta;
+import com.cheese.db.spring.injector.collector.SysSqlConfigInjectMetaCollector;
+import com.cheese.db.spring.injector.collector.dialect.MysqlDialectCollector;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
 
 import javax.annotation.Resource;
-import java.util.List;
+import java.util.Date;
 
 /**
  * devbase功能可以兼容DataSourceAutoConfiguration的功能，进行相应的配置即可
@@ -34,18 +33,37 @@ public class CheeseSampleApplication implements CommandLineRunner {
     @Resource
     private DB db;
     @Resource
-    private ApplicationContext applicationContext;
-    @Resource
     private ICommonService commonService;
 
     @Override
     public void run(String... args) throws Exception {
-        LoadAction action = Actions.getLoad(DevBaseConstant.DEFAULT_SQL_CONFIG_DATASOURCE, DevBaseConstant.DEFAULT_SQL_CONFIG_CODE);
-        List<InjectMeta> injectMetas = db.doActionGetList(action, InjectMeta.class);
-        //默认注入到DB.class中,可根据项目实际持久层mapper实现
-        applicationContext.publishEvent(new SqlInjectEvent(this, DB.class, InjectType.ALL, injectMetas));
+        // 数据测试移动到ut中参考 CheeseApplicationTest
+    }
 
-        //事务测试
-        commonService.useTransaction();
+    @Bean
+    public SysSqlConfigInjectMetaCollector sysSqlConfigInjectMetaCollector() {
+        return new SysSqlConfigInjectMetaCollector();
+    }
+
+    @Bean
+    public MysqlDialectCollector mysqlDialectCollector() {
+        return new MysqlDialectCollector();
+    }
+
+
+    @Bean
+    public DevBaseActionManager devBaseActionManager() {
+        DevBaseActionManager devBaseActionManager = new DevBaseActionManager() {
+            @Override
+            public void manager(Action action) {
+                if (action instanceof InsertTableAction) {
+                    InsertTableAction insertAction = (InsertTableAction) action;
+                    insertAction.putData("create_by", 50);
+                    insertAction.putData("create_time", new Date());
+                    System.out.println("custom devBaseActionManager running");
+                }
+            }
+        };
+        return devBaseActionManager;
     }
 }

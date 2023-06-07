@@ -1,5 +1,6 @@
 package com.cheese.db.core.props;
 
+import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.apache.ibatis.io.VFS;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.session.AutoMappingBehavior;
@@ -21,6 +22,8 @@ public class MybatisConfig {
     private boolean aggressiveLazyLoading;
     private boolean multipleResultSetsEnabled = true;
     private boolean useGeneratedKeys;
+    private Class<? extends KeyGenerator> KeyGenerator;
+    private String insertKeyProperty;
     private boolean useColumnLabel = true;
     private boolean cacheEnabled = true;
     private boolean callSettersOnNulls;
@@ -230,5 +233,21 @@ public class MybatisConfig {
 
     public void setConfigurationFactory(Class<?> configurationFactory) {
         this.configurationFactory = configurationFactory;
+    }
+
+    public Class<? extends KeyGenerator> getKeyGenerator() {
+        return KeyGenerator;
+    }
+
+    public void setKeyGenerator(Class<? extends KeyGenerator> keyGenerator) {
+        KeyGenerator = keyGenerator;
+    }
+
+    public String getInsertKeyProperty() {
+        return insertKeyProperty;
+    }
+
+    public void setInsertKeyProperty(String insertKeyProperty) {
+        this.insertKeyProperty = insertKeyProperty;
     }
 }

@@ -1,9 +1,14 @@
 package com.cheese.db.spring.injector;
 
+import com.cheese.db.core.DevBaseConfiguration;
 import com.cheese.db.core.support.DevBaseConstant;
 import com.cheese.db.spring.injector.metadata.InjectMeta;
+import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
+import org.apache.ibatis.executor.keygen.KeyGenerator;
+import org.apache.ibatis.executor.keygen.NoKeyGenerator;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.ResultMap;
+import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.scripting.xmltags.XMLLanguageDriver;
@@ -24,7 +29,15 @@ public class DevBaseStatementFactory implements DevBaseConstant {
         String scriptContent = String.format(SCRIPT_TAG_TEMPLATE, injectMeta.getContent());
         SqlSource sqlSource = languageDriver.createSqlSource(configuration, scriptContent, Map.class);
         String statementId = String.format(MAPPED_STATEMENT_ID_TEMPLATE, type.getName(), injectMeta.getCode());
-        MappedStatement ms = (new MappedStatement.Builder(configuration, statementId, sqlSource, injectMeta.getSqlCommandType())).resultMaps(new ArrayList<ResultMap>() {
+        KeyGenerator keyGenerator = new NoKeyGenerator();
+        String keyProperty = BLANK_STR;
+        String keyColumn = BLANK_STR;
+        if (SqlCommandType.INSERT == injectMeta.getSqlCommandType() && ((DevBaseConfiguration)configuration).getKeyGenerator().equals(Jdbc3KeyGenerator.class)) {
+            keyGenerator = new Jdbc3KeyGenerator();
+            keyColumn = injectMeta.getKeyColumn();
+            keyProperty = ((DevBaseConfiguration)configuration).getInsertKeyProperty();
+        }
+        MappedStatement ms = (new MappedStatement.Builder(configuration, statementId, sqlSource, injectMeta.getSqlCommandType())).keyGenerator(keyGenerator).keyProperty(keyProperty).keyColumn(keyColumn).resultMaps(new ArrayList<ResultMap>() {
             {
                 this.add((new org.apache.ibatis.mapping.ResultMap.Builder(configuration, "defaultResultMap",
                         injectMeta.getReturnType(),

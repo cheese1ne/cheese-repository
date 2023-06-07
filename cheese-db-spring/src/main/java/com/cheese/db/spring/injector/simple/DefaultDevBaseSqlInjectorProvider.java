@@ -5,6 +5,7 @@ import com.cheese.db.spring.injector.DevBaseSqlInjector;
 import com.cheese.db.spring.injector.DevBaseSqlInjectorProvider;
 import com.cheese.db.spring.injector.DevBaseStatementFactory;
 import com.cheese.db.spring.injector.metadata.simple.DefaultInjectMeta;
+import com.cheese.db.spring.injector.metadata.simple.MysqlTableMeta;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.session.Configuration;
@@ -23,13 +24,22 @@ import java.util.Map;
 public class DefaultDevBaseSqlInjectorProvider implements DevBaseSqlInjectorProvider, DevBaseConstant {
 
     private static DefaultInjectMeta injectMeta = new DefaultInjectMeta();
+    private static DefaultInjectMeta tableMeta = new DefaultInjectMeta();
 
     static {
+        // 配置的sql
         injectMeta.setCode(DEFAULT_SQL_CONFIG_CODE);
         injectMeta.setSqlCommandType(SqlCommandType.SELECT);
         injectMeta.setReturnType(DefaultInjectMeta.class);
         injectMeta.setDbKey(DEFAULT_SQL_CONFIG_DATASOURCE);
-        injectMeta.setContent(DEFAULT_SYS_CONFIG_SQL);
+        injectMeta.setContent(DEFAULT_MYSQL_SYS_CONFIG_SQL);
+
+        // 表格元数据sql
+        tableMeta.setCode(DEFAULT_TABLE_META_CONFIG_CODE);
+        tableMeta.setSqlCommandType(SqlCommandType.SELECT);
+        tableMeta.setReturnType(MysqlTableMeta.class);
+        tableMeta.setDbKey(ALL_IDENTIFIER);
+        tableMeta.setContent(DEFAULT_MYSQL_TABLE_META_CONFIG_SQL);
     }
 
     @Override
@@ -38,11 +48,14 @@ public class DefaultDevBaseSqlInjectorProvider implements DevBaseSqlInjectorProv
         return (devBaseSqlSessions, type) -> {
             Map<String, SqlSession> sqlSessions = devBaseSqlSessions.getSqlSessions();
             for (Map.Entry<String, SqlSession> entry : sqlSessions.entrySet()) {
-                if (!DEFAULT_SQL_CONFIG_DATASOURCE.equals(entry.getKey())) continue;
                 Configuration configuration = entry.getValue().getConfiguration();
-                MappedStatement statement = DevBaseStatementFactory.build(configuration, injectMeta, type);
-                configuration.addMappedStatement(statement);
+                MappedStatement tableMetaStatement = DevBaseStatementFactory.build(configuration, tableMeta, type);
+                configuration.addMappedStatement(tableMetaStatement);
+                if (!DEFAULT_SQL_CONFIG_DATASOURCE.equals(entry.getKey())) continue;
+                MappedStatement extraSqlStatement = DevBaseStatementFactory.build(configuration, injectMeta, type);
+                configuration.addMappedStatement(extraSqlStatement);
             }
+
         };
     }
 

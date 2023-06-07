@@ -1,6 +1,8 @@
 package com.cheese.db.core;
 
 import com.cheese.db.core.props.MybatisConfig;
+import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
+import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.apache.ibatis.session.Configuration;
 
 import java.util.Objects;
@@ -13,6 +15,8 @@ import java.util.Objects;
 public class DevBaseConfiguration extends Configuration {
 
     protected final DevBaseMapperRegistry mapperRegistry;
+    protected Class<? extends KeyGenerator> keyGenerator;
+    private String insertKeyProperty;
 
     private final String dbKey;
 
@@ -33,7 +37,24 @@ public class DevBaseConfiguration extends Configuration {
         this.setLogImpl(mybatisConfig.getLogImpl());
         this.setMapUnderscoreToCamelCase(mybatisConfig.isMapUnderscoreToCamelCase());
         this.setCacheEnabled(mybatisConfig.isCacheEnabled());
+        this.setUseGeneratedKeys(mybatisConfig.isUseGeneratedKeys());
+        this.keyGenerator = mybatisConfig.getKeyGenerator() == null ? Jdbc3KeyGenerator.class : mybatisConfig.getKeyGenerator();
+        this.insertKeyProperty = mybatisConfig.getInsertKeyProperty() == null ? "id" : mybatisConfig.getInsertKeyProperty();
     }
 
+    public Class<? extends KeyGenerator> getKeyGenerator() {
+        return keyGenerator;
+    }
 
+    public void setKeyGenerator(Class<? extends KeyGenerator> keyGenerator) {
+        this.keyGenerator = keyGenerator;
+    }
+
+    public String getInsertKeyProperty() {
+        return insertKeyProperty;
+    }
+
+    public void setInsertKeyProperty(String insertKeyProperty) {
+        this.insertKeyProperty = insertKeyProperty;
+    }
 }

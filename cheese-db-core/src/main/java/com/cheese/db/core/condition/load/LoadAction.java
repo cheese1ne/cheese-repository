@@ -13,17 +13,21 @@ import java.util.Map;
  */
 public class LoadAction extends AbstractAction {
 
-    //此属性为修改和新增准备
+    private Long id;
+
+    /**
+     * 此属性为修改和新增准备
+     */
     private Map<String, Object> data;
-    //此属性作为所有sql的条件属性
+    /**
+     * 此属性作为所有sql的条件属性
+     */
     private Map<String, Object> param;
 
     public LoadAction(String dbKey, String code){
-        super();
-        this.setDbKey(dbKey);
-        this.setCode(code);
-        this.data = new HashMap<>();
-        this.param = new HashMap<>();
+        super(dbKey, code);
+        this.data = new HashMap<>(8);
+        this.param = new HashMap<>(8);
     }
 
     public void setData(Map<String, Object> data) {
@@ -42,14 +46,20 @@ public class LoadAction extends AbstractAction {
         this.param.put(field, condition);
     }
 
-    //mybatis
     public Map<String, Object> getData() {
         return data;
     }
 
-    //mybatis
     public Map<String, Object> getParam() {
         return param;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     @Override

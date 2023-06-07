@@ -30,6 +30,7 @@ public interface DB {
      * 使用实例进行包装
      *
      * @param action
+     * @param wrapperClazz
      * @return
      */
     <T, R> WrapperResult<T, R> doAction(@Param(DevBaseConstant.ACTION_EW) Action action, Class<T> wrapperClazz);
@@ -46,6 +47,7 @@ public interface DB {
      * 查询元素列表
      *
      * @param action
+     * @param clazz
      * @param <T>
      * @return
      */
@@ -63,6 +65,7 @@ public interface DB {
      * 查询单个元素
      *
      * @param action
+     * @param clazz
      * @param <T>
      * @return
      */
@@ -72,6 +75,7 @@ public interface DB {
      * 查询元素分页
      *
      * @param action
+     * @param page
      * @return
      */
     IPage<Map<String, Object>> doActionGetPage(IPage<Map<String, Object>> page, @Param(DevBaseConstant.ACTION_EW) Action action);
@@ -80,6 +84,8 @@ public interface DB {
      * 查询元素分页
      *
      * @param action
+     * @param page
+     * @param clazz
      * @param <T>
      * @return
      */
