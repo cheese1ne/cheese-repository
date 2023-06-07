@@ -13,7 +13,7 @@ public interface DevBaseConstant {
     String SCRIPT_TAG_TEMPLATE = "<script>\n %s \n</script>";
     String DEFAULT_SQL_CONFIG_DATASOURCE = "sys";
     String DEFAULT_SQL_CONFIG_CODE = "SYS_SQL_CONFIG";
-    String DEFAULT_SYS_CONFIG_SQL = "SELECT id, code AS code, dbKey AS dbkey, actiontype AS sqlCommandTypeCode, content AS content FROM sys_sql_config WHERE actiontype IN (0,1,2,3) AND tbnm IS NULL <if test=\"ew.param.code !=null and ew.param.code != '' \"> AND code = #{ew.param.code}</if>";
+    String DEFAULT_SYS_CONFIG_SQL = "SELECT id, code AS code, dbKey AS dbkey, actiontype AS sqlCommandTypeCode, content AS content FROM sys_sql_config WHERE actiontype IN (0,1,2,3) <if test=\"ew.param.code !=null and ew.param.code != '' \"> AND code = #{ew.param.code}</if>";
 
     int ZERO = 0;
     int ONE = 1;
