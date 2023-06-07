@@ -1,17 +1,16 @@
 package com.cheese.db.spring.injector.collector;
 
+import com.cheese.db.core.props.DataSourceConfig;
 import com.cheese.db.core.support.DevBaseConstant;
+import com.cheese.db.spring.datasource.DatasourceContext;
 import com.cheese.db.spring.injector.metadata.InjectMeta;
+import com.cheese.db.spring.support.DatasourceContextSupport;
 import com.cheese.db.spring.support.DevBaseApplicationContextSupport;
 import com.cheese.db.spring.support.DevBaseTableMetaSupport;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
-import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * 抽象的表格元数据收集者
@@ -21,47 +20,32 @@ import java.util.Objects;
 public abstract class TableInjectMetaCollector extends DevBaseApplicationContextSupport implements InjectMetaCollector, EnvironmentAware, DevBaseConstant {
 
     private boolean needLoad;
-    private Environment environment;
-    private String[] injectSchemas;
-    private String[] injectDbKeys;
+    private final List<String> injectSchemas = new ArrayList<>();
 
     @Override
     public List<InjectMeta> getInjectMetas() {
-        if (!needLoad || Objects.isNull(injectSchemas) || injectSchemas.length <= DevBaseConstant.ZERO || injectSchemas.length != injectDbKeys.length) {
+        DatasourceContext context = DatasourceContextSupport.support();
+        if (!needLoad || Objects.isNull(context) || Objects.isNull(context.getDataSources()) || context.getDataSources().isEmpty()) {
             return Collections.emptyList();
         }
-        for (int i = 0; i < injectSchemas.length; i++) {
-            DevBaseTableMetaSupport.bindDBSchema(injectSchemas[i], injectDbKeys[i]);
+        Collection<DataSourceConfig> dataSourceConfigs = context.getDataSources().values();
+        for (DataSourceConfig dataSourceConfig : dataSourceConfigs) {
+            DevBaseTableMetaSupport.bindDBSchema(dataSourceConfig.getSchemeName(), dataSourceConfig.getSchemeKey());
+            injectSchemas.add(dataSourceConfig.getSchemeName());
         }
         List<InjectMeta> injectMetas = new ArrayList<>();
         for (String injectSchema : injectSchemas) {
             final List<InjectMeta> tableMetas = this.getInjectMetas(injectSchema);
             injectMetas.addAll(tableMetas);
         }
+        DatasourceContextSupport.clear();
         return injectMetas;
     }
 
     @Override
     public void setEnvironment(Environment environment) {
-        this.environment = environment;
         // 不启用时
-        final Boolean enable = environment.getProperty("devbase-db.use-default-config", Boolean.class, Boolean.FALSE);
-        this.needLoad = enable;
-        if (!enable) {
-            return;
-        }
-        final String schemas = environment.getProperty("devbase-db.inject-schemas");
-        final String dbKeys = environment.getProperty("devbase-db.inject-db-keys");
-        if (Objects.isNull(schemas)) {
-            this.injectSchemas = new String[0];
-        } else {
-            this.injectSchemas = StringUtils.split(schemas, ",");
-        }
-        if (Objects.isNull(dbKeys)) {
-            this.injectDbKeys = new String[0];
-        } else {
-            this.injectDbKeys = StringUtils.split(dbKeys, ",");
-        }
+        this.needLoad = environment.getProperty("devbase-db.use-default-config", Boolean.class, Boolean.FALSE);
     }
 
     /**

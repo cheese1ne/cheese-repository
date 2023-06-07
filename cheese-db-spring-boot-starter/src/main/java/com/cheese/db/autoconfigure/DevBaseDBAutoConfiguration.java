@@ -1,16 +1,19 @@
 package com.cheese.db.autoconfigure;
 
-import cn.hutool.db.ds.DSFactory;
-import cn.hutool.setting.Setting;
+import com.alibaba.druid.pool.DruidDataSource;
 import com.cheese.db.core.DevBaseConfiguration;
 import com.cheese.db.core.condition.Action;
 import com.cheese.db.core.condition.manager.DevBaseActionManager;
+import com.cheese.db.core.props.DataSourceConfig;
 import com.cheese.db.core.props.MybatisConfig;
 import com.cheese.db.props.DevBaseDBProps;
 import com.cheese.db.spring.annotation.DevBaseMappers;
+import com.cheese.db.spring.datasource.DatasourceContext;
 import com.cheese.db.spring.injector.DevBaseSqlInjector;
+import com.cheese.db.spring.injector.collector.SysSqlConfigInjectMetaCollector;
 import com.cheese.db.spring.injector.event.DevBaseSqlInjectListener;
 import com.cheese.db.spring.injector.simple.DefaultDevBaseSqlInjectorProvider;
+import com.cheese.db.spring.support.DatasourceContextSupport;
 import com.cheese.db.spring.transaction.aspectj.DevBaseMultiDataSourceTransactionalAspect;
 import com.cheese.db.spring.wrappers.DevBaseDataSourceTransactionManagers;
 import com.cheese.db.spring.wrappers.DevBaseDataSources;
@@ -83,17 +86,38 @@ public class DevBaseDBAutoConfiguration implements ApplicationContextAware {
      */
     @Bean
     @ConditionalOnMissingBean
-    public DevBaseDataSources devBaseDataSources() {
+    public DevBaseDataSources devBaseDataSources(DevBaseDBProps properties) {
         //默认通过hutool配置的方式加载数据源
         DevBaseDataSources dataSources = new DefaultDevBaseDataSources();
-        Setting setting = new Setting("config/db.setting");
-        setting.getGroups().forEach(key -> {
-            Setting dbSetting = setting.getSetting(key);
-            DataSource dataSource = DSFactory.create(dbSetting).getDataSource();
-            dataSources.put(key, dataSource);
+        Map<String, DataSourceConfig> dataSourcesProps = properties.getDataSources();
+        dataSourcesProps.forEach((key, config) -> {
+            dataSources.put(config.getSchemeKey(), createDataSource(config));
+            DatasourceContext context = new DatasourceContext();
+            context.setConfigDataSource(properties.getConfigDataSource());
+            context.setDataSources(dataSourcesProps);
+            DatasourceContextSupport.set(context);
         });
         logger.info("prepare to initialize default devBaseDataSources");
         return dataSources;
+    }
+
+    /**
+     * 默认创建druid数据源
+     *
+     * @param config
+     * @return
+     */
+    private DataSource createDataSource(DataSourceConfig config) {
+        DruidDataSource dataSource = new DruidDataSource();
+        dataSource.setUrl(config.getUrl());
+        dataSource.setDriverClassName(config.getDriverClassName());
+        dataSource.setUsername(config.getUsername());
+        dataSource.setPassword(config.getPassword());
+        dataSource.setInitialSize(config.getInitialSize());
+        dataSource.setMinIdle(config.getMinIdle());
+        dataSource.setMaxActive(config.getMaxActive());
+        dataSource.setMaxWait(config.getMaxWait());
+        return dataSource;
     }
 
     /**
@@ -206,6 +230,16 @@ public class DevBaseDBAutoConfiguration implements ApplicationContextAware {
             return defaultDevBaseSqlInjectorProvider.getDevBaseSqlInjector();
         }
 
+        /**
+         * 配置sql的收集器，与DefaultDevBaseSqlInjectorProvider组合使用
+         * 如果想自定义其他的注入配置请完全自定义DevBaseMappersImportConfiguration中的Bean
+         *
+         * @return
+         */
+        @Bean
+        public SysSqlConfigInjectMetaCollector sysSqlConfigInjectMetaCollector() {
+            return new SysSqlConfigInjectMetaCollector();
+        }
     }
 
     /**

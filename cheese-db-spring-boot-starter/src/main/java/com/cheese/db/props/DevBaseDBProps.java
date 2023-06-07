@@ -1,5 +1,6 @@
 package com.cheese.db.props;
 
+import com.cheese.db.core.props.DataSourceConfig;
 import com.cheese.db.core.props.MybatisConfig;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -19,8 +20,17 @@ public class DevBaseDBProps {
 
     private boolean usePageHelper = true;
 
-    /*多数据源下的mybatis配置信息*/
+    private String configDataSource;
+
+    /**
+     * 多数据源下的mybatis配置信息
+     */
     private Map<String, MybatisConfig> configuration;
+
+    /**
+     * 多数据源的连接配置
+     */
+    private Map<String, DataSourceConfig> dataSources;
 
     public boolean isEnabled() {
         return enabled;
@@ -52,5 +62,21 @@ public class DevBaseDBProps {
 
     public void setUsePageHelper(boolean usePageHelper) {
         this.usePageHelper = usePageHelper;
+    }
+
+    public String getConfigDataSource() {
+        return configDataSource;
+    }
+
+    public void setConfigDataSource(String configDataSource) {
+        this.configDataSource = configDataSource;
+    }
+
+    public Map<String, DataSourceConfig> getDataSources() {
+        return dataSources;
+    }
+
+    public void setDataSources(Map<String, DataSourceConfig> dataSources) {
+        this.dataSources = dataSources;
     }
 }

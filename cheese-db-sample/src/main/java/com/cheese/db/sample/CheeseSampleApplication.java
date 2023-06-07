@@ -6,7 +6,6 @@ import com.cheese.db.core.condition.manager.DevBaseActionManager;
 import com.cheese.db.core.condition.simple.insert.InsertTableAction;
 import com.cheese.db.core.mapper.DB;
 import com.cheese.db.sample.service.ICommonService;
-import com.cheese.db.spring.injector.collector.SysSqlConfigInjectMetaCollector;
 import com.cheese.db.spring.injector.collector.dialect.MysqlDialectCollector;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -38,11 +37,6 @@ public class CheeseSampleApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         // 数据测试移动到ut中参考 CheeseApplicationTest
-    }
-
-    @Bean
-    public SysSqlConfigInjectMetaCollector sysSqlConfigInjectMetaCollector() {
-        return new SysSqlConfigInjectMetaCollector();
     }
 
     @Bean
