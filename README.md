@@ -19,7 +19,15 @@
     <version>1.0.0</version>
 </dependency>
 ```
-2. 搭建springboot工程，并在启动类上添加`@EnableDevBase`注解（参考cheese-db-sample工程）
+
+2.运行工程下`doc/script/sql`中的`cheese-repository-sys.sql`和`cheese-repository-bus.sql`，目前sql脚本文件只提供mysql
+```markdown
+cheese-repository-sys.sql 导入配置数据库
+cheese-repository-bus.sql 导入其他数据库(可以多个业务数据库，这里提供一个demo)
+
+```
+
+3. 搭建springboot工程，并在启动类上添加`@EnableDevBase`注解（请参考cheese-db-sample工程）
 ```java
 /*
 	devbase功能可以兼容DataSourceAutoConfiguration的功能，进行相应的配置即可
