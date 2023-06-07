@@ -31,11 +31,12 @@ public class CheeseApplication {
         SpringApplication.run(CheeseApplication.class,args);
     }
 
-    @Bean
-    public SysSqlConfigInjectMetaCollector sysSqlConfigInjectMetaCollector() {
-        return new SysSqlConfigInjectMetaCollector();
-    }
-
+    /**
+     * mysql数据库的配置及数据库加载方式
+     * 目前仅实现mysql的实现方式，后续会陆续增加pg oracle 等数据库的元数据加载实现
+     * 
+     * @return
+     */
     @Bean
     public MysqlDialectCollector mysqlDialectCollector() {
         return new MysqlDialectCollector();
@@ -44,27 +45,42 @@ public class CheeseApplication {
 ```
 3. `application.properties`中配置
 ```properties
-# devbase-db开启开关，默认开启
+server.port=8081
+logging.level.com.cheese.db.spring=debug
+spring.main.allow-bean-definition-overriding=true
+
+# devbase 配置
+## devbase-db开启开关，默认开启
 devbase-db.enabled=true
-# devbase-db使用默认配置，默认为false
+## devbase-db使用默认配置，默认为false
 devbase-db.use-default-config=true
-# 需要注入单表操作的数据库名称以及数据库标识，基于hutool db.setting 配置后续会优化
-devbase-db.inject-schemas=wish-bus,wish-sys
-devbase-db.inject-db-keys=bus,sys
-# 数据库单表自增字段 主键自增 使用Jdbc3KeyGenerator存在的问题: 数据表主键字段必须使用自增策略
+
+# 多数据源配置
+devbase-db.configuration.sys.log-impl=org.apache.ibatis.logging.stdout.StdOutImpl
 devbase-db.configuration.sys.insert-key-property=id
 devbase-db.configuration.bus.insert-key-property=id
-# 需要自定义Action对象参数管理器时候需要覆盖默认bean，DevBaseActionManager在持久层被强引用，暂无法通过配置的方式替换 后续优化
-spring.main.allow-bean-definition-overriding=true
-```
-4.在`resources\config`目录下创建`db.setting`文件,配置数据源相关信息
-```setting
-[sys]
-url = jdbc:mysql://localhost:3306/sys-db?xxx
-username=xxx
-password=xxx
-[bus]
-url = jdbc:mysql://localhost:3306/sys-db?xxx
-username=xxx
-password=xxx
+
+## 配置数据源
+devbase-db.config-data-source=sys
+## 加载数据库的元数据，为数据库下的所有表生成基础增删改的方法
+## 元数据加载的key
+devbase-db.data-sources.sys.scheme-key=sys
+## 元数据加载数据库的名称，与url中的数据库名一致
+devbase-db.data-sources.sys.scheme-name=xxx_sys
+devbase-db.data-sources.sys.datasource-type=com.alibaba.druid.pool.DruidDataSource
+devbase-db.data-sources.sys.url=jdbc:mysql://localhost:3306/xxx_sys?characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&serverTimezone=GMT%2B8
+devbase-db.data-sources.sys.driver-class-name=com.mysql.cj.jdbc.Driver
+devbase-db.data-sources.sys.username=root
+devbase-db.data-sources.sys.password=root
+
+## 其他数据源 可以配置多个 
+devbase-db.data-sources.bus.scheme-key=bus
+devbase-db.data-sources.bus.scheme-name=xxx_bus
+devbase-db.data-sources.bus.datasource-type=com.alibaba.druid.pool.DruidDataSource
+devbase-db.data-sources.bus.url=jdbc:mysql://localhost:3306/xxx_bus?characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&serverTimezone=GMT%2B8
+devbase-db.data-sources.bus.driver-class-name=com.mysql.cj.jdbc.Driver
+devbase-db.data-sources.bus.username=root
+devbase-db.data-sources.bus.password=root
+
+
 ```
