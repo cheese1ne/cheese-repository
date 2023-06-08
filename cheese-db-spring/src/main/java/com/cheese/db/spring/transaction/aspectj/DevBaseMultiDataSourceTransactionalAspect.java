@@ -10,9 +10,6 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import java.util.Stack;
@@ -52,30 +49,8 @@ public class DevBaseMultiDataSourceTransactionalAspect implements ApplicationCon
     @Before("pointcut() && @annotation(transactional)")
     public void before(DevBaseMultiDataSourceTransactional transactional) {
         // 根据设置的事务名称按顺序声明，并放到ThreadLocal里
-//        log.info("Prepare to handle multi-source transaction management method...");
         System.err.println("Prepare to handle multi-source transaction management method...");
         String[] transactionDbKeys = transactional.transactionDbKeys();
-        Transactional[] transactionals = transactional.value();
-        for (Transactional transaction : transactionals) {
-            //事务管理器、此处使用数据库标识
-            String dbKey = transaction.transactionManager();
-            //事务隔离机制
-            Isolation isolation = transaction.isolation();
-            //不回滚的异常类
-            Class<? extends Throwable>[] classes = transaction.noRollbackFor();
-            //不会滚的异常类名
-            String[] noRollbackForClassNames = transaction.noRollbackForClassName();
-            //事务的传播机制
-            Propagation propagation = transaction.propagation();
-            //是否只读
-            boolean readOnly = transaction.readOnly();
-            //需要回滚的异常类
-            Class<? extends Throwable>[] rollbackFors = transaction.rollbackFor();
-            //需要回滚的异常类名
-            String[] rollbackForClassNames = transaction.rollbackForClassName();
-            //事务超时时间，默认 TransactionDefinition.TIMEOUT_DEFAULT 为-1
-            int timeout = transaction.timeout();
-        }
         Stack<Pair<DataSourceTransactionManager, TransactionStatus>> pairStack = new Stack<>();
         DevBaseDataSourceTransactionManagers transactionManagers = applicationContext.getBean(DevBaseDataSourceTransactionManagers.class);
 
@@ -93,7 +68,6 @@ public class DevBaseMultiDataSourceTransactionalAspect implements ApplicationCon
      */
     @AfterReturning("pointcut()")
     public void afterReturning() {
-//        log.info("No exception, ready to commit transaction...");
         System.err.println("No exception, ready to commit transaction...");
         // 栈顶弹出（后进先出）
         Stack<Pair<DataSourceTransactionManager, TransactionStatus>> pairStack = THREAD_LOCAL.get();
@@ -109,7 +83,6 @@ public class DevBaseMultiDataSourceTransactionalAspect implements ApplicationCon
      */
     @AfterThrowing(value = "pointcut()")
     public void afterThrowing() {
-//        log.info("An exception occurs and the transaction is ready to be rolled back...");
         System.err.println("An exception occurs and the transaction is ready to be rolled back...");
         // ※栈顶弹出（后进先出）
         Stack<Pair<DataSourceTransactionManager, TransactionStatus>> pairStack = THREAD_LOCAL.get();
@@ -127,7 +100,11 @@ public class DevBaseMultiDataSourceTransactionalAspect implements ApplicationCon
 
 
     /**
-     * 获取事务定义
+     * 获取事务定义,最基本的事务定义
+     * 因为异常捕获是通过切点完成的，所以使用的是definition而不是对异常有条件的TransactionAttribute
+     * 采用数据库的默认隔离级别
+     *  mysql 可重复读
+     *  oracle 读已提交
      *
      * @return
      */

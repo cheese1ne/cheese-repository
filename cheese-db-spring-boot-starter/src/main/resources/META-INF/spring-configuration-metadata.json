@@ -1,0 +1,37 @@
+{
+  "properties": [
+    {
+      "name": "devbase-db.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Whether to use devbase.",
+      "sourceType": "com.cheese.db.props.DevBaseDBProps",
+      "defaultValue": true
+    },
+    {
+      "name": "devbase-db.use-default-config",
+      "type": "java.lang.Boolean",
+      "description": "Whether to use devbase default config.",
+      "sourceType": "com.cheese.db.props.DevBaseDBProps",
+      "defaultValue": false
+    },
+    {
+      "name": "devbase-db.use-page-helper",
+      "type": "java.lang.Boolean",
+      "description": "Whether to use pageHelper",
+      "sourceType": "com.cheese.db.props.DevBaseDBProps",
+      "defaultValue": true
+    },
+    {
+      "name": "devbase-db.config-data-source",
+      "type": "java.lang.String",
+      "description": "Load config-sql's dbKey",
+      "sourceType": "com.cheese.db.props.DevBaseDBProps"
+    },
+    {
+      "name": "devbase-db.transaction-type",
+      "type": "com.cheese.db.enums.TransactionEnum",
+      "description": "choose a transaction type for devbase",
+      "sourceType": "com.cheese.db.props.DevBaseDBProps"
+    }
+  ]
+}

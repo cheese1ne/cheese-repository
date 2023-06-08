@@ -15,6 +15,6 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-@Import({DevBaseDBAutoConfiguration.class})
+@Import({DevBaseDBAutoConfiguration.class, DevBaseDbAutoImportSelector.class})
 public @interface EnableDevBase {
 }

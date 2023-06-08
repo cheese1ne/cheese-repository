@@ -14,7 +14,6 @@ import com.cheese.db.spring.injector.collector.SysSqlConfigInjectMetaCollector;
 import com.cheese.db.spring.injector.event.DevBaseSqlInjectListener;
 import com.cheese.db.spring.injector.simple.DefaultDevBaseSqlInjectorProvider;
 import com.cheese.db.spring.support.DatasourceContextSupport;
-import com.cheese.db.spring.transaction.aspectj.DevBaseMultiDataSourceTransactionalAspect;
 import com.cheese.db.spring.wrappers.DevBaseDataSourceTransactionManagers;
 import com.cheese.db.spring.wrappers.DevBaseDataSources;
 import com.cheese.db.spring.wrappers.DevBaseSqlSessionFactories;
@@ -70,16 +69,6 @@ public class DevBaseDBAutoConfiguration implements ApplicationContextAware {
     private static final Logger logger = LoggerFactory.getLogger(DevBaseDBAutoConfiguration.class);
 
     private ApplicationContext applicationContext;
-
-    /**
-     * 多数据事务切面
-     * 基于@DevBaseMultiDataSourceTransactional
-     * todo 此处功能尚未完善
-     */
-    @Bean
-    public DevBaseMultiDataSourceTransactionalAspect devBaseMultiDataSourceTransactionalAspect() {
-        return new DevBaseMultiDataSourceTransactionalAspect();
-    }
 
     /**
      * 默认的多数据源wrapper

@@ -1,9 +1,6 @@
 package com.cheese.db.spring.annotation;
 
 
-import org.springframework.core.annotation.AliasFor;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -16,18 +13,12 @@ import java.lang.annotation.Target;
  * @author sobann
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(value = ElementType.METHOD)
+@Target(value = { ElementType.METHOD, ElementType.TYPE})
 public @interface DevBaseMultiDataSourceTransactional {
 
     /**
      * 需要进行事务管理的数据库标识
      */
     String[] transactionDbKeys() default {};
-
-    @AliasFor("multiTransactional")
-    Transactional[] value() default {};
-
-    @AliasFor("value")
-    Transactional[] multiTransactional() default {};
 
 }
