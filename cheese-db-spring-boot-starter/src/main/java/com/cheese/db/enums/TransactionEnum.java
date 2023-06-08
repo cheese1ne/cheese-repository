@@ -1,7 +1,7 @@
 package com.cheese.db.enums;
 
 /**
- * 数据转换选择器枚举
+ * 事务方式枚举
  *
  * @author sobann
  */
@@ -18,7 +18,7 @@ public enum TransactionEnum {
     ASPECTJ("aspectj", "com.cheese.db.spring.transaction.aspectj.DevBaseMultiDataSourceTransactionalAspect"),
 
     /**
-     * 多数据源数据转换器选择器
+     * advisor事务的拦截方式
      */
     ADVISOR("advisor", "com.cheese.db.spring.transaction.aop.DevBaseMultiDatasourceTransactionAdvisor");
 
