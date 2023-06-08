@@ -180,6 +180,7 @@ c.实现FactoryBean.getObject，将持久层实例（其实是个代理对象）
 spring的事务基于SpringManagedTransaction，mybatis在实际执行的时候会从事务中获取connection, 如果开启了事务connection是储存在TransactionSynchronizationManager中，用的是ThreadLocal
 
 ```
+<hr/>
 
 #### cheese-db-spring-boot-starter
 
