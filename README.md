@@ -2,7 +2,9 @@
 
 ### 一、架构组件
 - cheese-db-core:`完成与mybatis的整合，针对多数据源重新设计代理方法的执行策略；设计条件构建工具`
-- cheese-db-rpc(待设计):`微服务之间数据调用方式，当前为单体服务设计功能`
+- cheese-db-rpc: (需要拆分cheese-db-spring功能，提供feign、dubbo, 模仿dubbo写一个netty+zookeeper的rpc方式)
+    - cheese-db-rpc-server: `持久层服务提供组件，完成cheese-db持久层数据收集和注册，提供多种服务调用方式，应用运行时选择调用方式`
+    - cheese-db-rpc-client: `持久层服务消费组件，消费方式要与服务组件提供方式保持一致`
 - cheese-db-spring:
     - `cheese-db整合spring，完成持久层实例BeanDefinition的定义、初始化以及持久层代理的创建；`
     - `多数据源、事务管理器、会话工厂以及会话顶层设计及默认实现；`
@@ -11,6 +13,7 @@
 - cheese-db-spring-boot-starter:`cheese-db-spring接入springboot，提供可插拔式的组件使用方式`
 
 ### 二、架构图
+**TODO 架构图需要更新，基于RPC**
 ![cheese-db.jpg](https://www.showdoc.com.cn/server/api/attachment/visitFile?sign=f1ed8a078a7e2072f8a2db74734fa32b "[cheese-db.jpg")
 
 

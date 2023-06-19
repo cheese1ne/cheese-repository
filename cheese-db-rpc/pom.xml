@@ -7,20 +7,38 @@
     <groupId>com.cheese.db</groupId>
     <artifactId>cheese-db-rpc</artifactId>
     <version>1.0.0</version>
+    <modules>
+        <module>cheese-db-rpc-common</module>
+        <module>cheese-db-rpc-client</module>
+        <module>cheese-db-rpc-server</module>
+    </modules>
+    <packaging>pom</packaging>
     <description>the components which can use rpc extend</description>
 
     <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
+        <jackson.version>2.9.9</jackson.version>
+        <hessian.version>4.0.63</hessian.version>
     </properties>
 
 
     <dependencies>
         <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>com.caucho</groupId>
+            <artifactId>hessian</artifactId>
+            <version>${hessian.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.cheese.db</groupId>
-            <artifactId>cheese-db-spring</artifactId>
-            <version>1.0.0</version>
+            <artifactId>cheese-db-core</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
-
 </project>
