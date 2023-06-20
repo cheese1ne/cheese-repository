@@ -1,0 +1,17 @@
+spring:
+  cloud:
+    inetutils:
+      ignored-interfaces: # 屏蔽网卡
+        - TP.*            # tp无线网卡
+        - Hyper-V.*       # docker(win)虚拟网卡
+        - docker.*        # docker(linux)虚拟网卡
+management: #允许访问springboot服务状态的所有监控接口
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+    logfile:
+      enabled: true
