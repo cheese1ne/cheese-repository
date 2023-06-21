@@ -7,12 +7,6 @@
     <groupId>com.cheese.db</groupId>
     <artifactId>cheese-db-rpc</artifactId>
     <version>1.0.0</version>
-    <modules>
-        <module>cheese-db-rpc-common</module>
-        <module>cheese-db-rpc-client</module>
-        <module>cheese-db-rpc-server</module>
-    </modules>
-    <packaging>pom</packaging>
     <description>the components which can use rpc extend</description>
 
     <properties>
