@@ -1,9 +1,8 @@
 package com.cheese.db.rpc.feign;
 
-import com.cheese.db.common.condition.Action;
 import com.cheese.db.common.condition.page.IPage;
 import com.cheese.db.common.service.DevBaseService;
-import com.cheese.db.common.wrapper.WrapperResult;
+import com.cheese.db.common.wrapper.ActionResult;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,7 +29,7 @@ public interface DevBaseFeign extends DevBaseService {
      */
     @Override
     @RequestMapping(value = DevBaseService.MAP_WRAPPER_ACTION_URL, method = RequestMethod.POST)
-    <R> WrapperResult<Map<String, R>, R> doAction(@RequestBody Action action);
+    ActionResult doAction(@RequestBody byte[] action);
 
     /**
      * 查询元素列表
@@ -40,7 +39,7 @@ public interface DevBaseFeign extends DevBaseService {
      */
     @Override
     @RequestMapping(value = DevBaseService.MAP_LIST_URL, method = RequestMethod.POST)
-    List<Map<String, Object>> doActionGetList(@RequestBody Action action);
+    List<Map<String, Object>> doActionGetList(@RequestBody byte[] action);
 
     /**
      * 查询单个元素
@@ -50,7 +49,7 @@ public interface DevBaseFeign extends DevBaseService {
      */
     @Override
     @RequestMapping(value = DevBaseService.MAP_SINGLE_URL, method = RequestMethod.POST)
-    Map<String, Object> doActionGetOne(@RequestBody Action action);
+    Map<String, Object> doActionGetOne(@RequestBody byte[] action);
 
     /**
      * 查询元素分页
@@ -60,20 +59,10 @@ public interface DevBaseFeign extends DevBaseService {
      * @param size
      * @return
      */
+    @Override
     @RequestMapping(value = DevBaseService.MAP_PAGE_URL, method = RequestMethod.POST)
     IPage<Map<String, Object>> doActionGetPage(
             @RequestParam(value = "current", required = false, defaultValue = "1") int current,
             @RequestParam(value = "size", required = false, defaultValue = "10") int size,
-            @RequestBody Action action);
-
-    /**
-     * 查询元素分页
-     *
-     * @param action
-     * @param page
-     * @return
-     */
-    @Override
-    @RequestMapping(value = DevBaseService.MAP_PAGE_URL, method = RequestMethod.POST)
-    IPage<Map<String, Object>> doActionGetPage(@RequestParam("page") IPage<Map<String, Object>> page, @RequestBody Action action);
+            @RequestBody byte[] action);
 }

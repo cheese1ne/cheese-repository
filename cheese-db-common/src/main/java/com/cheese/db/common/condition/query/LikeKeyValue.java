@@ -2,12 +2,15 @@ package com.cheese.db.common.condition.query;
 
 import com.cheese.db.common.enums.LikeType;
 
+import java.io.Serializable;
+
 /**
  * 键值关系like
  *
  * @author sobann
  */
-public final class LikeKeyValue {
+public final class LikeKeyValue implements Serializable {
+    private static final long serialVersionUID = -8932613901112509672L;
 
     private String key;
 

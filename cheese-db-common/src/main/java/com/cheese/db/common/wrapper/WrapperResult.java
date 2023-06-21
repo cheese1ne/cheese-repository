@@ -1,5 +1,7 @@
 package com.cheese.db.common.wrapper;
 
+import java.io.Serializable;
+
 /**
  * 包装类顶层接口
  *
@@ -7,7 +9,7 @@ package com.cheese.db.common.wrapper;
  * @param <R> 被包装的最终数据
  * @author sobann
  */
-public interface WrapperResult<T, R> {
+public interface WrapperResult<T, R> extends Serializable {
 
     /**
      * 获取包装对象,传入result数据进行包装

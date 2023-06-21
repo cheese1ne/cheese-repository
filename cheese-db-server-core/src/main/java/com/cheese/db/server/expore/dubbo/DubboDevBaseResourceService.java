@@ -1,9 +1,8 @@
 package com.cheese.db.server.expore.dubbo;
 
-import com.cheese.db.common.condition.Action;
 import com.cheese.db.common.condition.page.IPage;
 import com.cheese.db.common.service.DevBaseService;
-import com.cheese.db.common.wrapper.WrapperResult;
+import com.cheese.db.common.wrapper.ActionResult;
 import org.apache.dubbo.config.annotation.Service;
 
 import java.util.List;
@@ -23,26 +22,24 @@ public class DubboDevBaseResourceService implements DevBaseService {
         this.devBaseService = devBaseService;
     }
 
-
     @Override
-    public <R> WrapperResult<Map<String, R>, R> doAction(Action action) {
+    public ActionResult doAction(byte[] action) {
         return devBaseService.doAction(action);
     }
 
-
     @Override
-    public List<Map<String, Object>> doActionGetList(Action action) {
+    public List<Map<String, Object>> doActionGetList(byte[] action) {
         return devBaseService.doActionGetList(action);
     }
 
 
     @Override
-    public Map<String, Object> doActionGetOne(Action action) {
+    public Map<String, Object> doActionGetOne(byte[] action) {
         return devBaseService.doActionGetOne(action);
     }
 
     @Override
-    public IPage<Map<String, Object>> doActionGetPage(IPage<Map<String, Object>> page, Action action) {
-        return devBaseService.doActionGetPage(page, action);
+    public IPage<Map<String, Object>> doActionGetPage(int current, int size, byte[] action) {
+        return devBaseService.doActionGetPage(current, size, action);
     }
 }

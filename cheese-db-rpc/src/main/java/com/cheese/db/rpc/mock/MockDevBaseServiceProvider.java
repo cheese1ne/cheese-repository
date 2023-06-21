@@ -1,11 +1,10 @@
 package com.cheese.db.rpc.mock;
 
-import com.cheese.db.common.condition.Action;
 import com.cheese.db.common.condition.page.IPage;
+import com.cheese.db.common.condition.page.PageFactory;
 import com.cheese.db.common.service.DevBaseService;
 import com.cheese.db.common.service.DevBaseServiceProvider;
-import com.cheese.db.common.wrapper.MapWrapperResult;
-import com.cheese.db.common.wrapper.WrapperResult;
+import com.cheese.db.common.wrapper.ActionResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,27 +27,27 @@ public class MockDevBaseServiceProvider implements DevBaseServiceProvider {
         this.devBaseService = new DevBaseService() {
 
             @Override
-            public <R> WrapperResult<Map<String, R>, R> doAction(Action action) {
+            public ActionResult doAction(byte[] action) {
                 logger.error("devBaseService Is Mock, Return Mock Result");
-                return MapWrapperResult.Builder.build();
+                return new ActionResult();
             }
 
             @Override
-            public List<Map<String, Object>> doActionGetList(Action action) {
+            public List<Map<String, Object>> doActionGetList(byte[] action) {
                 logger.error("devBaseService Is Mock, Return Mock Result");
                 return new ArrayList<>(8);
             }
 
             @Override
-            public Map<String, Object> doActionGetOne(Action action) {
+            public Map<String, Object> doActionGetOne(byte[] action) {
                 logger.error("devBaseService Is Mock, Return Mock Result");
                 return new HashMap<>(8);
             }
 
             @Override
-            public IPage<Map<String, Object>> doActionGetPage(IPage<Map<String, Object>> page, Action action) {
+            public IPage<Map<String, Object>> doActionGetPage(int current, int page, byte[] action) {
                 logger.error("devBaseService Is Mock, Return Mock Result");
-                return page;
+                return PageFactory.getPage(current, page);
             }
         };
     }

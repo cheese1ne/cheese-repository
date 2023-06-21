@@ -1,8 +1,7 @@
 package com.cheese.db.common.service;
 
-import com.cheese.db.common.condition.Action;
 import com.cheese.db.common.condition.page.IPage;
-import com.cheese.db.common.wrapper.WrapperResult;
+import com.cheese.db.common.wrapper.ActionResult;
 
 import java.util.List;
 import java.util.Map;
@@ -22,7 +21,7 @@ public interface DevBaseService {
      * @param action
      * @return
      */
-    <R> WrapperResult<Map<String, R>, R> doAction(Action action);
+    ActionResult doAction(byte[] action);
     String MAP_WRAPPER_ACTION_URL = "/wrapper/map/action";
 
     /**
@@ -31,7 +30,7 @@ public interface DevBaseService {
      * @param action
      * @return
      */
-    List<Map<String, Object>> doActionGetList(Action action);
+    List<Map<String, Object>> doActionGetList(byte[] action);
     String MAP_LIST_URL = "/map/list";
 
     /**
@@ -40,26 +39,17 @@ public interface DevBaseService {
      * @param action
      * @return
      */
-    Map<String, Object> doActionGetOne(Action action);
+    Map<String, Object> doActionGetOne(byte[] action);
     String MAP_SINGLE_URL = "/map/single";
 
     /**
      * 查询元素分页
      *
+     * @param current
+     * @param size
      * @param action
-     * @param page
      * @return
      */
-    IPage<Map<String, Object>> doActionGetPage(IPage<Map<String, Object>> page, Action action);
+    IPage<Map<String, Object>> doActionGetPage(int current, int size, byte[] action);
     String MAP_PAGE_URL = "/map/page";
-
-
-//    /**
-//     * 查询单个元素
-//     *
-//     * @param bytes
-//     * @return
-//     */
-//    Map<String, Object> doActionGetOneSerialize(byte[] bytes);
-//    String MAP_SERIAL_SINGLE_URL = "/map/serialize/single";
 }

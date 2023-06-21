@@ -1,7 +1,6 @@
-package com.cheese.db.sample.server.test;
+package com.cheese.db.sample.client;
 
 
-import com.cheese.db.common.condition.Action;
 import com.cheese.db.common.condition.Actions;
 import com.cheese.db.common.condition.load.LoadAction;
 import com.cheese.db.common.condition.simple.delete.DeleteTableAction;
@@ -11,9 +10,11 @@ import com.cheese.db.common.condition.simple.update.UpdateTableAction;
 import com.cheese.db.common.enums.Comparator;
 import com.cheese.db.common.enums.LikeType;
 import com.cheese.db.common.enums.RangeType;
-import com.cheese.db.rpc.serializer.hessian.HessianSerializer;
-import com.cheese.db.sample.server.service.ICommonService;
-import com.cheese.db.server.core.mapper.DB;
+import com.cheese.db.common.service.DevBaseService;
+import com.cheese.db.common.service.DevBaseServiceProvider;
+import com.cheese.db.common.wrapper.ActionResult;
+import com.cheese.db.rpc.serializer.Serializer;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,7 +27,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 /**
- * cheese action简单的单元测试
+ * cheese 客户端简单的rpc测试
  *
  * @author sobann
  */
@@ -36,10 +37,18 @@ import java.util.stream.Stream;
 public class CheeseApplicationTest {
 
 
+    private DevBaseService devBaseService;
+
     @Resource
-    private DB db;
+    private DevBaseServiceProvider devBaseServiceProvider;
     @Resource
-    private ICommonService commonService;
+    private Serializer serializer;
+
+    @Before
+    public void obtainRpcService() {
+        devBaseService = devBaseServiceProvider.getDevBaseService();
+    }
+
 
     /**
      * 单表新增
@@ -56,10 +65,10 @@ public class CheeseApplicationTest {
         insertAction.putData("status", 0);
         insertAction.putData("is_deleted", 0);
         insertAction.putData("remark", "无");
-        db.doAction(insertAction);
-        // 获取自增主键 需要设置数据库表自增，后续可以借助DevBaseActionManager使用雪花id，主键column目前只能精确到数据库配置 devbase-db.configuration.${dbKey}.insert-key-property=id，无法精确配置到表(由于无实体配置)
-        Long id = insertAction.getId();
-        System.out.println("id = " + id);
+
+        ActionResult actionResult = devBaseService.doAction(serializer.serialize(insertAction));
+        Object result = actionResult.getResult();
+        System.out.println("result = " + result);
     }
 
     /**
@@ -79,7 +88,8 @@ public class CheeseApplicationTest {
         queryAction.putComparatorParam("remark", Comparator.EQUALS, "无");
         // 模糊条件
         queryAction.putLikeParam("apply_code", LikeType.ALL, "TOF");
-        List<Map<String, Object>> maps = db.doActionGetList(queryAction);
+
+        List<Map<String, Object>> maps = devBaseService.doActionGetList(serializer.serialize(queryAction));
 
         System.out.println("maps.size = " + maps.size());
     }
@@ -101,7 +111,9 @@ public class CheeseApplicationTest {
         deleteAction.putComparatorParam("is_deleted", Comparator.EQUALS, 1);
         // 模糊条件
         deleteAction.putLikeParam("apply_code", LikeType.ALL, "TOF");
-        db.doAction(deleteAction);
+        ActionResult actionResult = devBaseService.doAction(serializer.serialize(deleteAction));
+        Object result = actionResult.getResult();
+        System.out.println("result = " + result);
     }
 
     /**
@@ -125,7 +137,10 @@ public class CheeseApplicationTest {
         // 设置数据
         updateAction.putData("is_deleted", 1);
         updateAction.putData("apply_reason", "是资料啊 那就申请吧");
-        db.doAction(updateAction);
+
+        ActionResult actionResult = devBaseService.doAction(serializer.serialize(updateAction));
+        Object result = actionResult.getResult();
+        System.out.println("result = " + result);
     }
 
     /**
@@ -136,28 +151,8 @@ public class CheeseApplicationTest {
         LoadAction loadAction = Actions.getLoad("bus", "LOAD_BORROW_APPLY_INFO");
         loadAction.putParam("apply_id", 1);
         loadAction.putParam("is_deleted", 0);
-        Map<String, Object> taskInfo = db.doActionGetOne(loadAction);
+        Map<String, Object> taskInfo = devBaseService.doActionGetOne(serializer.serialize(loadAction));
         System.out.println("applyInfo = " + taskInfo);
     }
-
-    @Test
-    public void serializeTest() {
-        LoadAction loadAction = Actions.getLoad("bus", "LOAD_BORROW_APPLY_INFO");
-        loadAction.putParam("apply_id", 1);
-        loadAction.putParam("is_deleted", 0);
-        HessianSerializer hessianSerializer = new HessianSerializer();
-        // 序列化
-        byte[] serialize = hessianSerializer.serialize((Action) loadAction);
-        // 反序列化
-        Action action = hessianSerializer.deserialize(serialize, Action.class);
-        Map<String, Object> taskInfo = db.doActionGetOne(action);
-        System.out.println("applyInfo = " + taskInfo);
-    }
-
-    @Test
-    public void transactionTest() {
-        commonService.useTransaction();
-    }
-
 
 }

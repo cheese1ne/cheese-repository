@@ -1,6 +1,8 @@
 package com.cheese.db.rpc.common.enums;
 
 /**
+ * rpc调用类型
+ *
  * @author sobann
  */
 public enum RpcEnum {

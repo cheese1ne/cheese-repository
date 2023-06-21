@@ -44,7 +44,7 @@ public abstract class TableInjectMetaCollector extends DevBaseApplicationContext
     @Override
     public void setEnvironment(Environment environment) {
         // 不启用时
-        this.needLoad = environment.getProperty("devbase-db.use-default-config", Boolean.class, Boolean.FALSE);
+        this.needLoad = environment.getProperty("devbase-db.server.use-default-config", Boolean.class, Boolean.FALSE);
     }
 
     /**

@@ -2,12 +2,15 @@ package com.cheese.db.common.condition.query;
 
 import com.cheese.db.common.enums.RangeType;
 
+import java.io.Serializable;
+
 /**
  * 范围关系range
  *
  * @author sobann
  */
-public class RangeKeyValue {
+public class RangeKeyValue implements Serializable {
+    private static final long serialVersionUID = 4316502092614121463L;
 
     private String key;
 

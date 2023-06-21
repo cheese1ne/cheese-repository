@@ -7,6 +7,7 @@ import com.cheese.db.common.enums.Comparator;
 import com.cheese.db.common.enums.LikeType;
 import com.cheese.db.common.enums.RangeType;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -17,8 +18,9 @@ import java.util.stream.Collectors;
  *
  * @author sobann
  */
-public class CommonSegmentProvider {
+public class CommonSegmentProvider implements Serializable {
 
+    private static final long serialVersionUID = 4485697074279366105L;
     private static final String NO_SEGMENT = null;
 
     private final List<RangeKeyValue> rangeCdn;

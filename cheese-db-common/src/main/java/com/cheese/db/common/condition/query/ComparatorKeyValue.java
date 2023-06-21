@@ -2,12 +2,15 @@ package com.cheese.db.common.condition.query;
 
 import com.cheese.db.common.enums.Comparator;
 
+import java.io.Serializable;
+
 /**
  * 键值关系comparator
  *
  * @author sobann
  */
-public final class ComparatorKeyValue {
+public final class ComparatorKeyValue implements Serializable {
+    private static final long serialVersionUID = 1205636860394724252L;
 
     private String key;
 

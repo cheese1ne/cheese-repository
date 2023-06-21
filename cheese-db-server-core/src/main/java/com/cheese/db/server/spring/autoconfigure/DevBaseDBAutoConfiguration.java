@@ -4,6 +4,7 @@ import com.alibaba.druid.pool.DruidDataSource;
 import com.cheese.db.common.condition.Action;
 import com.cheese.db.common.condition.manager.DevBaseActionManager;
 import com.cheese.db.common.service.DevBaseService;
+import com.cheese.db.rpc.serializer.Serializer;
 import com.cheese.db.server.core.DevBaseConfiguration;
 import com.cheese.db.server.core.mapper.DB;
 import com.cheese.db.server.core.props.DataSourceConfig;
@@ -239,9 +240,9 @@ public class DevBaseDBAutoConfiguration implements ApplicationContextAware {
          * @return
          */
         @Bean
-        public DevBaseService devBaseService(DB db) {
-            SimpleDevBaseService defaultDevBaseService = new SimpleDevBaseService(db);
-            logger.info("prepare to initialize default devBaseService");
+        public DevBaseService devBaseService(DB db, Serializer serializer) {
+            SimpleDevBaseService defaultDevBaseService = new SimpleDevBaseService(db, serializer);
+            logger.info("prepare to initialize default simpleDevBaseService");
             return defaultDevBaseService;
         }
     }
