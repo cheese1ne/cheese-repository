@@ -17,7 +17,7 @@ import java.util.Map;
  *
  * @author sobann
  */
-@FeignClient(value = "${devbase-db.rpc.server}" ,contextId = "devBaseServerFeign",path = "devbase/server",fallbackFactory = DevBaseFeignHystrix.class)
+@FeignClient(value = "${devbase-db.client.rpc-server}" ,contextId = "devBaseServerFeign",path = "devbase/server",fallbackFactory = DevBaseFeignHystrix.class)
 public interface DevBaseFeign extends DevBaseService {
     /**
      * 执行action获取结果,此方法为通用方法,

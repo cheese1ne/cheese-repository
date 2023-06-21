@@ -1,21 +1,20 @@
 package com.cheese.db.sample.client;
 
-import com.cheese.db.rpc.DevBaseRpcAutoImportSelector;
+import com.cheese.db.client.EnableDevBaseClient;
 import org.springframework.beans.BeansException;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.annotation.Import;
 
 /**
  * DevBase服务消费者
  *
  * @author sobann
  */
+@EnableDevBaseClient
 @SpringBootApplication
-@Import(DevBaseRpcAutoImportSelector.class)
 public class DevBaseClientApplication implements CommandLineRunner, ApplicationContextAware {
 
     private ApplicationContext applicationContext;

@@ -4,7 +4,7 @@
       "name": "devbase-db.server.enabled",
       "type": "java.lang.Boolean",
       "description": "Whether to use devbase.",
-      "sourceType": "com.cheese.db.props.DevBaseDBProps",
+      "sourceType": "com.cheese.db.server.spring.props.DevBaseDBProps",
       "defaultValue": true
     },
     {
@@ -18,26 +18,26 @@
       "name": "devbase-db.server.use-page-helper",
       "type": "java.lang.Boolean",
       "description": "Whether to use pageHelper",
-      "sourceType": "com.cheese.db.props.DevBaseDBProps",
+      "sourceType": "com.cheese.db.server.spring.props.DevBaseDBProps",
       "defaultValue": true
     },
     {
       "name": "devbase-db.server.config-data-source",
       "type": "java.lang.String",
       "description": "Load config-sql's dbKey",
-      "sourceType": "com.cheese.db.props.DevBaseDBProps"
+      "sourceType": "com.cheese.db.server.spring.props.DevBaseDBProps"
     },
     {
       "name": "devbase-db.server.transaction-type",
       "type": "com.cheese.db.server.spring.enums.TransactionEnum",
       "description": "choose a transaction type for devbase",
-      "sourceType": "com.cheese.db.props.DevBaseDBProps"
+      "sourceType": "com.cheese.db.server.spring.props.DevBaseDBProps"
     },
     {
       "name": "devbase-db.server.exposer-type",
       "type": "com.cheese.db.server.spring.enums.ExposerEnum",
       "description": "choose a service exposer type for devbase",
-      "sourceType": "com.cheese.db.props.DevBaseDBProps"
+      "sourceType": "com.cheese.db.server.spring.props.DevBaseDBProps"
     }
   ]
 }

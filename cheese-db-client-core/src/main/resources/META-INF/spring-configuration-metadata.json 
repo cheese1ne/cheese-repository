@@ -1,0 +1,16 @@
+{
+  "properties": [
+    {
+      "name": "devbase-db.client.rpc-type",
+      "type": "com.cheese.db.rpc.common.enums.RpcEnum",
+      "description": "choose a client rpc type for devbase",
+      "sourceType": "com.cheese.db.client.spring.props.DevBaseDBProps"
+    },
+    {
+      "name": "devbase-db.client.rpc-server",
+      "type": "java.lang.String",
+      "description": "setting a server for devbase",
+      "sourceType": "com.cheese.db.client.spring.props.DevBaseDBProps"
+    }
+  ]
+}

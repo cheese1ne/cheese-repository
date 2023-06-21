@@ -20,7 +20,7 @@ import java.util.List;
 public class DevBaseDbAutoImportSelector implements ImportSelector, EnvironmentAware {
 
     public static final String TRANSACTION = "devbase-db.server.transaction-type";
-    public static final String EXPOSER = "devbase-db.server.exposer";
+    public static final String EXPOSER = "devbase-db.server.exposer-type";
 
     private Environment environment;
 
